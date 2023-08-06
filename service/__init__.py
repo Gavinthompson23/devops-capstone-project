@@ -15,7 +15,7 @@ from service.common import log_handlers
 app = Flask(__name__)
 app.config.from_object(config)
 
-#create instance from talisman class and cors instance
+# create instance from talisman class and cors instance
 talisman = Talisman(app)
 CORS(app)
 
