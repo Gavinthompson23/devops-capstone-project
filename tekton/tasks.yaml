@@ -50,27 +50,29 @@ spec:
           rm -rf "${WORKSPACE_SOURCE_PATH}"/..?*
         fi
 ---
+---
 apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
   name: nose
 spec:
-  description: this task will run nosetests on the provided input
-  workspaces: source
+  description: This task will run nosetests on the provided input.
+  workspaces:
+    - name: source
   params:
     - name: args
-      description: arguments nosetests will use to correctly test code
+      description: Arguments to pass to nose
       type: string
       default: "-v"
     - name: database_uri
-      description: pass in the database/connect to it
+      description: Database connection string
       type: string
-      default: ("sqlite:///test.db")
+      default: "sqlite:///test.db"
   steps:
     - name: nosetests
       image: python:3.9-slim
       workingDir: $(workspaces.source.path)
-      env: 
+      env:
         - name: DATABASE_URI
           value: $(params.database_uri)
       script: |
@@ -81,7 +83,5 @@ spec:
         python -m pip install --upgrade pip wheel
         pip install -qr requirements.txt
 
-        echo "***** Running nosetests with $(params.args)"
-        # runs nosetests adding with spec and color(red-bad/green-good)
+        echo "***** Running nosetests with: $(params.args)"
         nosetests $(params.args)
----
